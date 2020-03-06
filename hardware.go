@@ -48,11 +48,11 @@ var (
 )
 
 // GetInfo returns the hardware information of the projector
-func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, error) {
+func (p *Projector) GetInfo(ctx context.Context) (interface{}, error) {
 	var info HardwareInfo
 
 	// model name
-	resp, err := p.SendCommand(ctx, addr, modelName)
+	resp, err := p.SendCommand(ctx, p.Address, modelName)
 	if err != nil {
 		return info, err
 	}
@@ -60,7 +60,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.ModelName = strings.Trim(resp, "\"")
 
 	// ip address
-	resp, err = p.SendCommand(ctx, addr, ipAddr)
+	resp, err = p.SendCommand(ctx, p.Address, ipAddr)
 	if err != nil {
 		return info, err
 	}
@@ -68,7 +68,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.NetworkInfo.IPAddress = strings.Trim(resp, "\"")
 
 	// gateway
-	resp, err = p.SendCommand(ctx, addr, gateway)
+	resp, err = p.SendCommand(ctx, p.Address, gateway)
 	if err != nil {
 		return info, err
 	}
@@ -76,14 +76,14 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.NetworkInfo.Gateway = strings.Trim(resp, "\"")
 
 	// dns
-	resp, err = p.SendCommand(ctx, addr, dns)
+	resp, err = p.SendCommand(ctx, p.Address, dns)
 	if err != nil {
 		return info, err
 	}
 
 	info.NetworkInfo.DNS = append(info.NetworkInfo.DNS, strings.Trim(resp, "\""))
 
-	resp, err = p.SendCommand(ctx, addr, dns2)
+	resp, err = p.SendCommand(ctx, p.Address, dns2)
 	if err != nil {
 		return info, err
 	}
@@ -91,7 +91,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.NetworkInfo.DNS = append(info.NetworkInfo.DNS, strings.Trim(resp, "\""))
 
 	// mac address
-	resp, err = p.SendCommand(ctx, addr, macAddr)
+	resp, err = p.SendCommand(ctx, p.Address, macAddr)
 	if err != nil {
 		return info, err
 	}
@@ -99,7 +99,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.NetworkInfo.MACAddress = strings.Trim(resp, "\"")
 
 	// serial number
-	resp, err = p.SendCommand(ctx, addr, serialNum)
+	resp, err = p.SendCommand(ctx, p.Address, serialNum)
 	if err != nil {
 		return info, err
 	}
@@ -107,7 +107,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.SerialNumber = strings.Trim(resp, "\"")
 
 	// filter status
-	resp, err = p.SendCommand(ctx, addr, filter)
+	resp, err = p.SendCommand(ctx, p.Address, filter)
 	if err != nil {
 		return info, err
 	}
@@ -115,7 +115,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.FilterStatus = strings.Trim(resp, "\"")
 
 	// power status
-	resp, err = p.SendCommand(ctx, addr, powerStatus)
+	resp, err = p.SendCommand(ctx, p.Address, powerStatus)
 	if err != nil {
 		return info, err
 	}
@@ -123,7 +123,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	info.PowerStatus = strings.Trim(resp, "\"")
 
 	// warnings
-	resp, err = p.SendCommand(ctx, addr, warnings)
+	resp, err = p.SendCommand(ctx, p.Address, warnings)
 	if err != nil {
 		return info, err
 	}
@@ -134,7 +134,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	}
 
 	// errors
-	resp, err = p.SendCommand(ctx, addr, errors)
+	resp, err = p.SendCommand(ctx, p.Address, errors)
 	if err != nil {
 		return info, err
 	}
@@ -145,7 +145,7 @@ func (p *Projector) GetInfo(ctx context.Context, addr string) (interface{}, erro
 	}
 
 	// timer info
-	resp, err = p.SendCommand(ctx, addr, timer)
+	resp, err = p.SendCommand(ctx, p.Address, timer)
 	if err != nil {
 		return info, err
 	}

@@ -15,6 +15,7 @@ import (
 type Projector struct {
 	poolInit sync.Once
 	pool     *pooled.Pool
+	Address  string
 }
 
 const (

@@ -11,9 +11,9 @@ var (
 	muteStatus   = []byte("muting ?\r\n")
 )
 
-// GetVolume returns the volume level of the projector
-func (p *Projector) GetVolume(ctx context.Context, addr string) (int, error) {
-	resp, err := p.SendCommand(ctx, addr, volumeStatus)
+// GetVolumeByBlock returns the volume level of the projector
+func (p *Projector) GetVolumeByBlock(ctx context.Context, block string) (int, error) {
+	resp, err := p.SendCommand(ctx, p.Address, volumeStatus)
 	if err != nil {
 		return -1, err
 	}
@@ -26,13 +26,13 @@ func (p *Projector) GetVolume(ctx context.Context, addr string) (int, error) {
 	return adcpToNormalVolume(volume), nil
 }
 
-// SetVolume sets the volume level of the projector
-func (p *Projector) SetVolume(ctx context.Context, addr string, level int) error {
+// SetVolumeByBlock sets the volume level of the projector
+func (p *Projector) SetVolumeByBlock(ctx context.Context, block string, level int) error {
 	level = normalToAdcpVolume(level)
 
 	cmd := []byte(fmt.Sprintf("volume %v\r\n", level))
 
-	resp, err := p.SendCommand(ctx, addr, cmd)
+	resp, err := p.SendCommand(ctx, p.Address, cmd)
 	if err != nil {
 		return err
 	}
@@ -44,9 +44,9 @@ func (p *Projector) SetVolume(ctx context.Context, addr string, level int) error
 	return nil
 }
 
-// GetMuted returns whether the projector is muted or not
-func (p *Projector) GetMuted(ctx context.Context, addr string) (bool, error) {
-	resp, err := p.SendCommand(ctx, addr, muteStatus)
+// GetMutedByBlock returns whether the projector is muted or not
+func (p *Projector) GetMutedByBlock(ctx context.Context, block string) (bool, error) {
+	resp, err := p.SendCommand(ctx, p.Address, muteStatus)
 	if err != nil {
 		return false, err
 	}
@@ -64,8 +64,8 @@ func (p *Projector) GetMuted(ctx context.Context, addr string) (bool, error) {
 	return muted, nil
 }
 
-// SetMuted sets the muted status of the projector
-func (p *Projector) SetMuted(ctx context.Context, addr string, muted bool) error {
+// SetMutedByBlock sets the muted status of the projector
+func (p *Projector) SetMutedByBlock(ctx context.Context, block string, muted bool) error {
 	var str string
 	switch muted {
 	case true:
@@ -75,7 +75,7 @@ func (p *Projector) SetMuted(ctx context.Context, addr string, muted bool) error
 	}
 
 	cmd := []byte(fmt.Sprintf("muting \"%s\"\r\n", str))
-	resp, err := p.SendCommand(ctx, addr, cmd)
+	resp, err := p.SendCommand(ctx, p.Address, cmd)
 	if err != nil {
 		return err
 	}

@@ -17,10 +17,10 @@ var (
 )
 
 // GetBlanked asks the projector if it is blanked or not and returns the result
-func (p *Projector) GetBlanked(ctx context.Context, addr string) (bool, error) {
+func (p *Projector) GetBlanked(ctx context.Context) (bool, error) {
 	var blanked bool
 
-	resp, err := p.SendCommand(ctx, addr, BlankStatus)
+	resp, err := p.SendCommand(ctx, p.Address, BlankStatus)
 	if err != nil {
 		return false, err
 	}
@@ -38,13 +38,13 @@ func (p *Projector) GetBlanked(ctx context.Context, addr string) (bool, error) {
 }
 
 // SetBlanked tells the projector to blank or unblank itself
-func (p *Projector) SetBlanked(ctx context.Context, addr string, blanked bool) error {
+func (p *Projector) SetBlanked(ctx context.Context, blanked bool) error {
 	cmd := Unblank
 	if blanked {
 		cmd = Blank
 	}
 
-	resp, err := p.SendCommand(ctx, addr, cmd)
+	resp, err := p.SendCommand(ctx, p.Address, cmd)
 	if err != nil {
 		return err
 	}

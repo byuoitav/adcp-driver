@@ -18,10 +18,10 @@ var (
 )
 
 // GetPower returns the status of the projector
-func (p *Projector) GetPower(ctx context.Context, addr string) (string, error) {
+func (p *Projector) GetPower(ctx context.Context) (string, error) {
 	var state string
 
-	resp, err := p.SendCommand(ctx, addr, PowerStatus)
+	resp, err := p.SendCommand(ctx, p.Address, PowerStatus)
 	if err != nil {
 		return "", err
 	}
@@ -50,7 +50,7 @@ func (p *Projector) GetPower(ctx context.Context, addr string) (string, error) {
 }
 
 // SetPower sets the status of the projector
-func (p *Projector) SetPower(ctx context.Context, addr, power string) error {
+func (p *Projector) SetPower(ctx context.Context, power string) error {
 	var cmd []byte
 	switch {
 	case strings.EqualFold(power, "on"):
@@ -61,6 +61,6 @@ func (p *Projector) SetPower(ctx context.Context, addr, power string) error {
 		return fmt.Errorf("unable to set power state to %q: must be %q or %q", power, "on", "standby")
 	}
 
-	_, err := p.SendCommand(ctx, addr, cmd)
+	_, err := p.SendCommand(ctx, p.Address, cmd)
 	return err
 }
