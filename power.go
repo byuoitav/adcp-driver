@@ -3,7 +3,6 @@ package adcp
 import (
 	"context"
 	"fmt"
-	"strings"
 )
 
 var (
@@ -18,44 +17,38 @@ var (
 )
 
 // GetPower returns the status of the projector
-func (p *Projector) GetPower(ctx context.Context) (string, error) {
-	var state string
+func (p *Projector) GetPower(ctx context.Context) (bool, error) {
+	state := false
 
 	resp, err := p.SendCommand(ctx, p.Address, PowerStatus)
 	if err != nil {
-		return "", err
+		return false, err
 	}
 	switch resp {
 	case `"standby"`:
-		state = "standby"
 	case `"startup"`:
-		state = "on"
+		state = true
 	case `"on"`:
-		state = "on"
+		state = true
 	case `"cooling1"`:
-		state = "standby"
 	case `"cooling2"`:
-		state = "standby"
 	case `"saving_cooling1"`:
-		state = "standby"
 	case `"saving_cooling2"`:
-		state = "standby"
 	case `"saving_standby"`:
-		state = "standby"
 	default:
-		return "", fmt.Errorf("unknown power state '%s'", resp)
+		return state, fmt.Errorf("unknown power state '%s'", resp)
 	}
 
 	return state, nil
 }
 
 // SetPower sets the status of the projector
-func (p *Projector) SetPower(ctx context.Context, power string) error {
+func (p *Projector) SetPower(ctx context.Context, power bool) error {
 	var cmd []byte
 	switch {
-	case strings.EqualFold(power, "on"):
+	case power:
 		cmd = PowerOn
-	case strings.EqualFold(power, "standby"):
+	case !power:
 		cmd = PowerStandby
 	default:
 		return fmt.Errorf("unable to set power state to %q: must be %q or %q", power, "on", "standby")

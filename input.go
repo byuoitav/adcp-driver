@@ -14,18 +14,20 @@ var (
 	ActiveSignal = []byte("signal ?\r\n")
 )
 
-// GetInput returns the current input that the projector is set to
-func (p *Projector) GetInput(ctx context.Context) (string, error) {
+// GetAudioVideoInputs returns the current input that the projector is set to
+func (p *Projector) GetAudioVideoInputs(ctx context.Context) (map[string]string, error) {
+	toReturn := make(map[string]string)
 	resp, err := p.SendCommand(ctx, p.Address, InputStatus)
 	if err != nil {
-		return "", err
+		return toReturn, err
 	}
 
-	return strings.Trim(resp, "\""), nil
+	toReturn[""] = strings.Trim(resp, "\"")
+	return toReturn, nil
 }
 
-// SetInput sets the current input of the projector to the given input
-func (p *Projector) SetInput(ctx context.Context, input string) error {
+// SetAudioVideoInput sets the current input of the projector to the given input
+func (p *Projector) SetAudioVideoInput(ctx context.Context, output, input string) error {
 	cmd := []byte(fmt.Sprintf("input \"%s\"\r\n", input))
 	resp, err := p.SendCommand(ctx, p.Address, cmd)
 	if err != nil {
